@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Galeri Irmanufa</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f5f7fb;
+        min-height: 100vh;
+      }
+
+      .login-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+      }
+      .login-card {
+        background: white;
+        border-radius: 32px;
+        padding: 32px;
+        text-align: center;
+        width: 90%;
+        max-width: 320px;
+      }
+      .login-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+      }
+      .login-icon i {
+        font-size: 28px;
+        color: white;
+      }
+      .login-card h3 {
+        margin-bottom: 8px;
+      }
+      .login-card p {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 20px;
+      }
+      .login-input {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid #ddd;
+        border-radius: 50px;
+        margin-bottom: 16px;
+        font-size: 14px;
+      }
+      .login-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .back-home {
+        width: 100%;
+        padding: 12px;
+        background: none;
+        border: none;
+        color: #666;
+        margin-top: 12px;
+        cursor: pointer;
+      }
+
+      .admin-header {
+        background: #1a1a2e;
+        padding: 12px 16px;
+        position: sticky;
+        top: 0;
+      }
+      .admin-header-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .admin-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: white;
+      }
+      .admin-logo i {
+        font-size: 24px;
+      }
+      .admin-logo h3 {
+        font-size: 16px;
+      }
+      .admin-logo span {
+        font-size: 11px;
+        opacity: 0.7;
+      }
+      .admin-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .admin-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 18px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .admin-btn.logout:hover {
+        background: #e74c3c;
+      }
+
+      .admin-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 16px;
+      }
+      .admin-card {
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      }
+      .admin-card h3 {
+        margin-bottom: 20px;
+        font-size: 18px;
+      }
+      .badge {
+        background: #667eea;
+        color: white;
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        margin-left: 8px;
+      }
+      .form-group {
+        margin-bottom: 16px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 500;
+        font-size: 13px;
+      }
+      .form-input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        font-size: 14px;
+      }
+      .form-input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+      .form-buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+      }
+      .btn-primary,
+      .btn-secondary {
+        flex: 1;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+      }
+      .btn-secondary {
+        background: #f0f0f0;
+        color: #333;
+      }
+
+      .table-responsive {
+        overflow-x: auto;
+      }
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .data-table th,
+      .data-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+        font-size: 13px;
+      }
+      .data-table th {
+        background: #f8f9fa;
+      }
+      .table-icon {
+        font-size: 32px;
+      }
+      .btn-edit,
+      .btn-delete {
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 12px;
+        margin: 0 2px;
+      }
+      .btn-edit {
+        background: #3498db;
+        color: white;
+      }
+      .btn-delete {
+        background: #e74c3c;
+        color: white;
+      }
+      .text-center {
+        text-align: center;
+        padding: 30px;
+        color: #999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-modal" id="loginModal">
+      <div class="login-card">
+        <div class="login-icon"><i class="fas fa-user-shield"></i></div>
+        <h3>Login Admin</h3>
+        <p>Masukkan sandi untuk mengelola galeri</p>
+        <input
+          type="password"
+          id="adminPassword"
+          placeholder="Sandi Admin"
+          class="login-input"
+        />
+        <button class="login-btn" onclick="checkPassword()">Masuk</button>
+        <button class="back-home" onclick="location.href = 'index.html'">
+          ← Kembali
+        </button>
+      </div>
+    </div>
+
+    <div id="adminPanel" style="display: none">
+      <div class="admin-header">
+        <div class="admin-header-inner">
+          <div class="admin-logo">
+            <i class="fas fa-user-shield"></i>
+            <div>
+              <h3>Admin Panel</h3>
+              <span>Galeri Irmanufa</span>
+            </div>
+          </div>
+          <div class="admin-actions">
+            <button onclick="exportData()" class="admin-btn">📥</button>
+            <button onclick="logout()" class="admin-btn logout">🚪</button>
+            <a href="index.html" class="admin-btn">👁️</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-container">
+        <div class="admin-card">
+          <h3 id="formTitle">➕ Tambah Kegiatan</h3>
+          <form id="kegiatanForm">
+            <input type="hidden" id="editId" />
+            <div class="form-group">
+              <label>📌 Nama Kegiatan</label>
+              <input
+                type="text"
+                id="namaKegiatan"
+                class="form-input"
+                required
+                placeholder="Contoh: Seminar Nasional 2026"
+              />
+            </div>
+            <div class="form-group">
+              <label>🔗 Link Google Drive</label>
+              <input
+                type="url"
+                id="linkDrive"
+                class="form-input"
+                required
+                placeholder="https://drive.google.com/..."
+              />
+            </div>
+            <div class="form-group">
+              <label>🖼️ Icon (Emoji)</label>
+              <input
+                type="text"
+                id="iconUrl"
+                class="form-input"
+                placeholder="🏆 🕌 🌙 📸 🎉 ✨"
+              />
+              <small style="font-size: 11px; color: #999"
+                >Masukkan emoji (contoh: 🏆, 🕌, 🌙, 📸)</small
+              >
+            </div>
+            <div class="form-buttons">
+              <button type="submit" class="btn-primary">💾 Simpan</button>
+              <button type="button" class="btn-secondary" id="cancelBtn">
+                ❌ Batal
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="admin-card">
+          <h3>
+            📋 Daftar Kegiatan <span id="totalCount" class="badge">0</span>
+          </h3>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Icon</th>
+                  <th>Nama</th>
+                  <th>Drive</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="kegiatanList"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const STORAGE_KEY = "irmanufa_gallery";
+      const PASSWORD = "irmanufa2026";
+      const defaultData = [
+        {
+          id: "1",
+          nama: "Kabinet IRMANUFA GG & ALL STARS",
+          link: "https://drive.google.com/drive/u/6/folders/1a8JuSkVHQiWga8ds0XpZvdF6nuCXlE-K",
+          icon: "🏆",
+        },
+        {
+          id: "2",
+          nama: "Takbir Keliling",
+          link: "https://s.id/fotokegiatantarlingujay2026",
+          icon: "🕌",
+        },
+        {
+          id: "3",
+          nama: "Penyambutan Bulan Suci Ramadhan",
+          link: "https://drive.google.com/drive/folders/1_lKXooPkIq4tCP-DX14dHmwLPHJjmj_c",
+          icon: "🌙",
+        },
+        {
+          id: "4",
+          nama: "Gallery Irmanufa Random",
+          link: "https://drive.google.com/drive/folders/1dTlVLOKSiIm73yqxgFOcyOIiM4PC8LPT",
+          icon: "📸",
+        },
+      ];
+
+      function getData() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (!stored) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
+          return [...defaultData];
+        }
+        try {
+          const parsed = JSON.parse(stored);
+          return Array.isArray(parsed) && parsed.length > 0
+            ? parsed
+            : [...defaultData];
+        } catch (e) {
+          return [...defaultData];
+        }
+      }
+
+      function saveData(data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        window.dispatchEvent(
+          new StorageEvent("storage", {
+            key: STORAGE_KEY,
+            newValue: JSON.stringify(data),
+          }),
+        );
+      }
+
+      function checkPassword() {
+        const pass = document.getElementById("adminPassword").value;
+        if (pass === PASSWORD) {
+          localStorage.setItem("admin_auth", "true");
+          document.getElementById("loginModal").style.display = "none";
+          document.getElementById("adminPanel").style.display = "block";
+          renderAdminTable();
+          setupAdminForm();
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Salah!",
+            text: "Sandi tidak sesuai",
+          });
+          document.getElementById("adminPassword").value = "";
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("admin_auth");
+        document.getElementById("loginModal").style.display = "flex";
+        document.getElementById("adminPanel").style.display = "none";
+        Swal.fire({
+          icon: "success",
+          title: "Logout",
+          text: "Berhasil keluar",
+          timer: 1500,
+        });
+      }
+
+      function exportData() {
+        const data = getData();
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "galeri_irmanufa_backup.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        Swal.fire({
+          icon: "success",
+          title: "Export Berhasil",
+          text: "Data tersimpan",
+          timer: 1500,
+        });
+      }
+
+      function renderAdminTable() {
+        const tbody = document.getElementById("kegiatanList");
+        const data = getData();
+        document.getElementById("totalCount").innerText = data.length;
+        if (data.length === 0) {
+          tbody.innerHTML =
+            '</table><td colspan="4" class="text-center">Belum ada data</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data
+          .map(
+            (item) => `
+                <tr>
+                    <td class="table-icon">${item.icon || "📁"}</td>
+                    <td><strong>${item.nama}</strong></td>
+                    <td><a href="${item.link}" target="_blank" style="color:#667eea;">📂 Buka Drive</a></td>
+                    <td>
+                        <button class="btn-edit" onclick="editKegiatan('${item.id}')">✏️ Edit</button>
+                        <button class="btn-delete" onclick="deleteKegiatan('${item.id}')">🗑️ Hapus</button>
+                    </td>
+                </tr>
+            `,
+          )
+          .join("");
+      }
+
+      function setupAdminForm() {
+        const form = document.getElementById("kegiatanForm");
+        form.onsubmit = (e) => {
+          e.preventDefault();
+          const editId = document.getElementById("editId").value;
+          const nama = document.getElementById("namaKegiatan").value.trim();
+          const link = document.getElementById("linkDrive").value.trim();
+          let icon = document.getElementById("iconUrl").value.trim();
+          if (!nama || !link) {
+            Swal.fire("Error", "Nama dan link wajib diisi!", "error");
+            return;
+          }
+          if (!icon) icon = "📁";
+          const data = getData();
+          if (editId) {
+            const idx = data.findIndex((i) => i.id === editId);
+            if (idx !== -1) {
+              data[idx] = { ...data[idx], nama, link, icon };
+              saveData(data);
+              Swal.fire("Berhasil", "Data berhasil diupdate", "success");
+            }
+          } else {
+            data.push({ id: Date.now().toString(), nama, link, icon });
+            saveData(data);
+            Swal.fire("Berhasil", "Kegiatan baru ditambahkan", "success");
+          }
+          resetForm();
+          renderAdminTable();
+        };
+        document.getElementById("cancelBtn").onclick = resetForm;
+      }
+
+      function editKegiatan(id) {
+        const item = getData().find((i) => i.id === id);
+        if (item) {
+          document.getElementById("editId").value = item.id;
+          document.getElementById("namaKegiatan").value = item.nama;
+          document.getElementById("linkDrive").value = item.link;
+          document.getElementById("iconUrl").value = item.icon || "";
+          document.getElementById("formTitle").innerHTML = "✏️ Edit Kegiatan";
+          document
+            .querySelector(".admin-card")
+            .scrollIntoView({ behavior: "smooth" });
+        }
+      }
+
+      function deleteKegiatan(id) {
+        Swal.fire({
+          title: "Yakin hapus?",
+          text: "Data akan dihapus permanen!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#e74c3c",
+          confirmButtonText: "Ya, Hapus!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const newData = getData().filter((i) => i.id !== id);
+            saveData(newData);
+            renderAdminTable();
+            Swal.fire("Terhapus!", "Data berhasil dihapus", "success");
+            if (document.getElementById("editId").value === id) resetForm();
+          }
+        });
+      }
+
+      function resetForm() {
+        document.getElementById("editId").value = "";
+        document.getElementById("namaKegiatan").value = "";
+        document.getElementById("linkDrive").value = "";
+        document.getElementById("iconUrl").value = "";
+        document.getElementById("formTitle").innerHTML = "➕ Tambah Kegiatan";
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        if (localStorage.getItem("admin_auth") === "true") {
+          document.getElementById("loginModal").style.display = "none";
+          document.getElementById("adminPanel").style.display = "block";
+          renderAdminTable();
+          setupAdminForm();
+        }
+        document
+          .getElementById("adminPassword")
+          .addEventListener("keypress", (e) => {
+            if (e.key === "Enter") checkPassword();
+          });
+      });
+
+      window.editKegiatan = editKegiatan;
+      window.deleteKegiatan = deleteKegiatan;
+      window.checkPassword = checkPassword;
+      window.logout = logout;
+      window.exportData = exportData;
+    </script>
+  </body>
+</html>
